@@ -1,4 +1,4 @@
-# from flask import Flask
+from flask import Flask, request
 # from random_word import RandomWords
 # import os
 # nltk.download('gutenberg')
@@ -11,7 +11,13 @@ import random
 import pandas as pd
 from openai import OpenAI
 import networkx as nx
-import matplotlib.pyplot as plt
+
+
+app = Flask(__name__)
+
+# @app.route("/members")
+# def members():
+#     return {"members": ["Member1", "Member2", "Member3"]}
 
 client = OpenAI(
     # This is the default and can be omitted
@@ -53,8 +59,8 @@ def get_graph(s1, s2):
     wG = nx.Graph()
     si = simplify(s1)
     target = simplify(s2)
-    print(si)
-    print(target)
+    # print(si)
+    # print(target)
     threshold = 0.05
     
     wG.add_nodes_from([
@@ -85,14 +91,29 @@ def get_graph(s1, s2):
             wG.remove_node(i)
         else:
             wG.remove_edge(i-1, i-1)
-        
-    nx.draw(wG)
-    plt.show()
     
     return wG
 
+# wG.nodes[idx]['word'] gives the word itself (node.name)
+# idx is the word's index in the graph (node.index)
+# wG.edges[i] is a tuple (i,j) where i and j are the indices of the nodes connected by the edge
 
-word_graph_test = get_graph('jazz', 'improvisation')
+@app.route("/make_graph")
+def make_graph():
+    args = request.args
+    s1 = args.get("s1")
+    s2 = args.get("s2")
+    nodes, edges = [], []
+    nodes.append({"id": 0, "name" : s1, "type": "endpoint"})
+    nodes.append({"id": 1, "name" : s2, "type": "endpoint"})
+    graph = get_graph(s1, s2)
+    for idx in range(0, len(graph.nodes)):
+        if(graph.nodes[idx]['word'] != s1 and graph.nodes[idx]['word'] != s2):
+            nodes.append({"id": idx, "name" : graph.nodes[idx]['word'], "type": "interior"})
+    for edge in graph.edges:
+        edges.append({"source": edge[0], "target": edge[1]})
+    return {"nodes": nodes, "links": edges}
+
 # prompt = "What's the most popular ski resort in Europe?"
 # sample = genresponse("What's the most popular ski resort in Europe?")
 # print(sample.choices[0].message.content)
@@ -100,12 +121,6 @@ word_graph_test = get_graph('jazz', 'improvisation')
 
 # print(gen_response("Write a summary of the benefits of exercise."))
 
-# app = Flask(__name__)
-
-# Members API route
-# @app.route("/members")
-# def members():
-#     return {"members": ["Member1", "Member2", "Member3"]}
 
 
 # r = RandomWords()
@@ -118,5 +133,6 @@ word_graph_test = get_graph('jazz', 'improvisation')
 
 # moby_df.to_csv('moby1.csv')
 
-# if __name__ == "__main__":
-#     app.run(debug=True)
+
+if __name__ == "__main__":
+    app.run(debug=True)
