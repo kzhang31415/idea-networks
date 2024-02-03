@@ -104,15 +104,15 @@ def make_graph():
     s1 = args.get("s1")
     s2 = args.get("s2")
     nodes, edges = [], []
-    nodes.append({"id": 0, "name" : s1, "type": "endpoint"})
-    nodes.append({"id": 1, "name" : s2, "type": "endpoint"})
     graph = get_graph(s1, s2)
     for idx in range(0, len(graph.nodes)):
         if(graph.nodes[idx]['word'] != s1 and graph.nodes[idx]['word'] != s2):
             nodes.append({"id": idx, "name" : graph.nodes[idx]['word'], "type": "interior"})
     for edge in graph.edges:
         edges.append({"source": edge[0], "target": edge[1]})
-    return {"nodes": nodes, "links": edges}
+    for node in nodes:
+        print(node)
+    return {"nodes": list(nodes), "links": list(edges)}
 
 # prompt = "What's the most popular ski resort in Europe?"
 # sample = genresponse("What's the most popular ski resort in Europe?")
