@@ -1,0 +1,102 @@
+{
+    "nodes": [
+      {
+        "id": 1,
+        "name": "Idea 1",
+        "type": "interior"
+      },
+      {
+        "id": 2,
+        "name": "Idea 2",
+        "type": "interior"
+      },
+      {
+        "id": 3,
+        "name": "Idea 3",
+        "type": "interior"
+      },
+      {
+        "id": 4,
+        "name": "Idea 4",
+        "type": "interior"
+      },
+      {
+        "id": 5,
+        "name": "Idea 5",
+        "type": "interior"
+      },
+      {
+        "id": 6,
+        "name": "Apple pies",
+        "type": "endpoint"
+      },
+      {
+        "id": 7,
+        "name": "Idea 6",
+        "type": "interior"
+      },
+      {
+        "id": 8,
+        "name": "Bushes",
+        "type": "endpoint"
+      },
+      {
+        "id": 9,
+        "name": "Idea 7",
+        "type": "interior"
+      },
+      {
+        "id": 10,
+        "name": "Idea 8",
+        "type": "interior"
+      }
+    ],
+    "links": [
+      {
+        "source": 1,
+        "target": 2
+      },
+      {
+        "source": 1,
+        "target": 5
+      },
+      {
+        "source": 1,
+        "target": 6
+      },
+  
+      {
+        "source": 2,
+        "target": 3
+      },
+      {
+        "source": 2,
+        "target": 7
+      }
+    ,
+  
+      {
+        "source": 3,
+        "target": 4
+      },
+      {
+        "source": 8,
+        "target": 3
+      }
+    ,
+      {
+        "source": 4,
+        "target": 5
+      }
+    ,
+  
+      {
+        "source": 4,
+        "target": 9
+      },
+      {
+        "source": 5,
+        "target": 10
+      }
+    ]
+  }
