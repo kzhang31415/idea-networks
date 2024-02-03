@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 client = OpenAI(
     # This is the default and can be omitted
-    api_key = "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",
+    api_key = "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",
 )
 # client = OpenAI()
 def genresponse(prompt):
@@ -42,7 +42,11 @@ def random_word():
 def simplify(s):
     p = "Can you summarize the most important concept of the phrase \""
     q = "\"? Please respond with one word."
-    s_chat = genresponse(p + s + q)
+    count = len(s.split())
+    if count == 1:
+        s_chat = s
+    else:
+        s_chat = genresponse(p + s + q)
     return ''.join([c.lower() for c in s_chat if c.isalnum()])
     
 def get_graph(s1, s2):
@@ -51,12 +55,13 @@ def get_graph(s1, s2):
     target = simplify(s2)
     print(si)
     print(target)
-    threshold = 0.9
+    threshold = 0.05
     
     wG.add_nodes_from([
-        (si, {'synset' : wn.synsets(si)[0]}),
-        (target, {'synset' : wn.synsets(target)[0]})
+        (0, {'word' : si, 'synset' : wn.synsets(si)[0]}),
+        (1, {'word' : target, 'synset' : wn.synsets(target)[0]})
     ])
+    i = 2
     
     while not nx.is_connected(wG):
         w = random_word()
@@ -66,18 +71,20 @@ def get_graph(s1, s2):
         if len(wn.synsets(w)) == 0:
             continue
         w_set = wn.synsets(w)[0]
-        wG.add_node(w, synset=w_set)
+        wG.add_node(i, word=w, synset=w_set)
+        i += 1
         
-        for word in wG.nodes():
-            score = w_set.path_similarity(wG.nodes[word]['synset'])
+        for idx in wG.nodes():
+            score = w_set.path_similarity(wG.nodes[idx]['synset'])
             if score > threshold:
                 connect = True
-                wG.add_edge(w, word)
+                wG.add_edge(i-1, idx)
         
         if not connect:
-            wG.remove_node(w)
+            i -= 1
+            wG.remove_node(i)
         else:
-            wG.remove_edge(w, w)
+            wG.remove_edge(i-1, i-1)
         
     nx.draw(wG)
     plt.show()
@@ -85,8 +92,7 @@ def get_graph(s1, s2):
     return wG
 
 
-word_graph_test = get_graph('jazz', 'pie')
-
+word_graph_test = get_graph('jazz', 'improvisation')
 # prompt = "What's the most popular ski resort in Europe?"
 # sample = genresponse("What's the most popular ski resort in Europe?")
 # print(sample.choices[0].message.content)
