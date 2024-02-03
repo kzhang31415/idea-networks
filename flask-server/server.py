@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 from flask import Flask, request
 import csv
 import nltk
@@ -9,13 +7,14 @@ import random
 import pandas as pd
 from openai import OpenAI
 import networkx as nx
+from collections import deque
 
 
 app = Flask(__name__)
 
 
 client = OpenAI(
-    api_key = "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",
+    api_key = "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"
 )
 
 def genresponse(prompt):
@@ -67,6 +66,8 @@ def get_graph(s1, s2):
     while not nx.is_connected(wG):
         w = w_queue.popleft()
         W_list = related_words(w[1])
+        print(w[1])
+        print(W_list)
         
         for r in W_list:
             r1 = ''.join([c.lower() for c in r if c.isalpha()])
@@ -92,9 +93,7 @@ def get_graph(s1, s2):
 
     return wG
 
-    
-
+print(get_graph("apple", "pie"))
 
 if __name__ == "__main__":
     app.run(debug=True)
->>>>>>> 2f82e530e3195d0ccf165baf431d52741ac7aecf
