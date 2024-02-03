@@ -36,3 +36,8 @@
     transform: rotate(360deg);
   }
 }
+
+section.Main > div > svg:first-child {
+  opacity: 0;
+  height: 0;
+}
